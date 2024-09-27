@@ -53,8 +53,8 @@ public class Population {
 
     public void seedPopulation(int percentageAlive) {
         // generate initial population with percentageAlive
-        if (percentageAlive <= 0 || percentageAlive > 100) {
-            throw new InvalidPercentageException("Percentage should be between 1 and 100");
+        if (percentageAlive < 0 || percentageAlive > 100) {
+            throw new InvalidPercentageException("Percentage should be between 0 and 100");
         }
         int totalCells = rows * columns;
         int totalAliveCells = (totalCells * percentageAlive) / 100;
@@ -70,8 +70,9 @@ public class Population {
     }
     
     public void simulateGenerations(int generations) {
+        GenerateNextGeneration generateNextGeneration = new GenerateNextGeneration();
         for (int i = 0; i < generations; i++) {
-            evaluateNextGeneration();
+            generateNextGeneration.evaluateNextGeneration(cellGrid);
             printPopulation();
             if (getTotalAliveCells() == 0) {
                 throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
@@ -80,17 +81,12 @@ public class Population {
     }
 
     public void simulateGenerations() {
+        GenerateNextGeneration generateNextGeneration = new GenerateNextGeneration();
         while (getTotalAliveCells() != 0) {
-            evaluateNextGeneration();
+            generateNextGeneration.evaluateNextGeneration(cellGrid);
             printPopulation();
         }
         throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
-    }
-
-    private void evaluateNextGeneration() {
-        // evaluate next generation
-        GenerateNextGeneration generateNextGeneration = new GenerateNextGeneration();
-        generateNextGeneration.evaluateNextGeneration(cellGrid);
     }
 
     public int getTotalAliveCells() {

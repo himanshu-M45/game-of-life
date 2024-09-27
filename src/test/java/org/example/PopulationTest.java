@@ -90,8 +90,8 @@ class PopulationTest {
 
     @Test
     void testStartGameUntilAllCellsAreDeadWith100PercentSeedThrowsException() throws AllCellsAreDeadException {
-        Population population = new Population(10, 10);
-        population.seedPopulation(50);
+        Population population = new Population(5, 5);
+        population.seedPopulation(15);
         assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
     }
 }
