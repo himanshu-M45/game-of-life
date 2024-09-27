@@ -3,6 +3,7 @@ package org.example;
 import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidPercentageException;
 import org.example.Exceptions.InvalidRowColumnValueException;
+import org.example.Exceptions.NoNewGenerationCanBeCreated;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,16 +20,9 @@ class PopulationTest {
     }
 
     @Test
-    void testPopulationInitialization() {
-        Population population = new Population(10, 20);
-        assertEquals(10, population.getRows());
-        assertEquals(20, population.getColumns());
-    }
-
-    @Test
     void testTotalPopulation() {
         Population population = new Population(10, 20);
-        assertEquals(200, population.getRows() * population.getColumns());
+        assertEquals(200, population.totalPopulation(10, 20));
     }
 
     @Test
@@ -89,9 +83,23 @@ class PopulationTest {
     }
 
     @Test
-    void testStartGameUntilAllCellsAreDeadWith100PercentSeedThrowsException() throws AllCellsAreDeadException {
+    void testStartGameUntilAllCellsAreDeadWith0PercentSeedThrowsException() throws AllCellsAreDeadException {
         Population population = new Population(5, 5);
-        population.seedPopulation(15);
+        population.seedPopulation(0);
         assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
+    }
+
+    @Test
+    void testStartGameUntilAllCellsAreDeadWith100PercentSeed() {
+        Population population = new Population(10, 20);
+        population.seedPopulation(100);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
+    }
+
+    @Test
+    void testStartGameUntilAllCellsAreDeadWith60PercentSeed() {
+        Population population = new Population(10, 20);
+        population.seedPopulation(60);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 }

@@ -3,13 +3,16 @@ package org.example;
 import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidPercentageException;
 import org.example.Exceptions.InvalidRowColumnValueException;
+import org.example.Exceptions.NoNewGenerationCanBeCreated;
 import org.example.enums.State;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 public class Population {
-    private List<List<Cell>> cellGrid;
+    private final List<List<Cell>> cellGrid;
     private final int rows;
     private final int columns;
 
@@ -39,14 +42,6 @@ public class Population {
         System.out.println();
     }
 
-    public int getRows() {
-        return rows;
-    }
-
-    public int getColumns() {
-        return columns;
-    }
-
     public List<List<Cell>> getCellGrid() {
         return cellGrid;
     }
@@ -56,8 +51,7 @@ public class Population {
         if (percentageAlive < 0 || percentageAlive > 100) {
             throw new InvalidPercentageException("Percentage should be between 0 and 100");
         }
-        int totalCells = rows * columns;
-        int totalAliveCells = (totalCells * percentageAlive) / 100;
+        int totalAliveCells = (totalPopulation(rows, columns) * percentageAlive) / 100;
         while (totalAliveCells > 0) {
             int randomRow = (int) (Math.random() * rows);
             int randomColumn = (int) (Math.random() * columns);
@@ -68,12 +62,16 @@ public class Population {
             }
         }
     }
-    
+
+    public int totalPopulation(int rows, int columns) {
+        return rows * columns;
+    }
+
     public void simulateGenerations(int generations) {
         GenerateNextGeneration generateNextGeneration = new GenerateNextGeneration();
         for (int i = 0; i < generations; i++) {
-            generateNextGeneration.evaluateNextGeneration(cellGrid);
             printPopulation();
+            generateNextGeneration.evaluateNextGeneration(cellGrid);
             if (getTotalAliveCells() == 0) {
                 throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
             }
@@ -82,9 +80,20 @@ public class Population {
 
     public void simulateGenerations() {
         GenerateNextGeneration generateNextGeneration = new GenerateNextGeneration();
+        Queue<Integer> queue = new ArrayDeque<>(3);
         while (getTotalAliveCells() != 0) {
-            generateNextGeneration.evaluateNextGeneration(cellGrid);
             printPopulation();
+            generateNextGeneration.evaluateNextGeneration(cellGrid);
+
+            if (queue.size() == 3) {
+                queue.poll(); // Remove the front element
+            }
+            queue.offer(getTotalAliveCells()); // Add the new element to the back
+
+            // Check if all elements in the queue are the same
+            if (queue.size() == 3 && queue.stream().distinct().count() == 1) {
+                throw new NoNewGenerationCanBeCreated("No new generation can be created. Exiting the simulation.");
+            }
         }
         throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
     }

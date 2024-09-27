@@ -1,15 +1,15 @@
 package org.example;
 
-import org.example.Exceptions.CellNotFoundException;
 import org.example.enums.State;
 
 import java.util.List;
 
 public class GenerateNextGeneration {
     public void evaluateNextGeneration(List<List<Cell>> cellGrid) {
-        for (List<Cell> row : cellGrid) {
-            for (Cell cell : row) {
-                int neighbourCount = getNeighbours(cellGrid, cell);
+        for (int row = 0; row < cellGrid.size(); row++) {
+            for (int column = 0; column < cellGrid.get(row).size(); column++) {
+                Cell cell = cellGrid.get(row).get(column); // extract cell from the grid
+                int neighbourCount = getNeighboursCount(cellGrid, row, column); // get total alive neighbours count
                 if (!cell.isAlive() && neighbourCount == 3) {
                     cell.setState(State.ALIVE);
                 }
@@ -20,17 +20,14 @@ public class GenerateNextGeneration {
         }
     }
 
-    private int getNeighbours(List<List<Cell>> cellGrid, Cell cell) {
-        int[] coordinates = findCellCoordinates(cellGrid, cell);
-        int row = coordinates[0];
-        int column = coordinates[1];
-        int[] stepsToReachNeighboursRow = {-1, -1, -1, 0, 0, 1, 1, 1};
-        int[] stepsToReachNeighboursColumn = {-1, 0, 1, -1, 1, -1, 0, 1};
+    private int getNeighboursCount(List<List<Cell>> cellGrid, int row, int column) {
+        int[] stepsToReachNeighbourRow = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] stepsToReachNeighbourColumn = {-1, 0, 1, -1, 1, -1, 0, 1};
         int count = 0;
         // Check all 8 possible neighbors and count alive ones
         for (int i = 0; i < 8; i++) {
-            int newRow = row + stepsToReachNeighboursRow[i];
-            int newColumn = column + stepsToReachNeighboursColumn[i];
+            int newRow = row + stepsToReachNeighbourRow[i];
+            int newColumn = column + stepsToReachNeighbourColumn[i];
             if (newRow >= 0 && newRow < cellGrid.size() && newColumn >= 0 && newColumn < cellGrid.get(row).size()) {
                 if (cellGrid.get(newRow).get(newColumn).isAlive()) {
                     count++;
@@ -38,17 +35,5 @@ public class GenerateNextGeneration {
             }
         }
         return count;
-    }
-
-    private int[] findCellCoordinates(List<List<Cell>> cellGrid, Cell cell) {
-        for (int i = 0; i < cellGrid.size(); i++) {
-            List<Cell> rowList = cellGrid.get(i);
-            for (int j = 0; j < rowList.size(); j++) {
-                if (rowList.get(j) == cell) {
-                    return new int[]{i, j};
-                }
-            }
-        }
-        throw new CellNotFoundException("Cell not found in the grid");
     }
 }
