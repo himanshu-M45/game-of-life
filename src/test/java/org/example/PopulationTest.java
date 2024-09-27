@@ -32,7 +32,7 @@ class PopulationTest {
 
     @Test
     void tesPopulationGenerationAndPrintPopulation() {
-        assertDoesNotThrow(population::printGrid);
+        assertDoesNotThrow(population::printPopulation);
     }
 
     @Test
@@ -40,6 +40,14 @@ class PopulationTest {
         population.generateInitialPopulation(10);
         int expectedTotalAliveCells = 20;
         assertEquals(expectedTotalAliveCells, population.getTotalAliveCells());
-        assertDoesNotThrow(population::printGrid);
+        assertDoesNotThrow(population::printPopulation);
+    }
+
+    @Test
+    void test100PercentAlivePopulationWhichIs200AliveCells() {
+        population.generateInitialPopulation(100);
+        int expectedTotalAliveCells = 200;
+        assertEquals(expectedTotalAliveCells, population.getTotalAliveCells());
+        assertDoesNotThrow(population::printPopulation);
     }
 }

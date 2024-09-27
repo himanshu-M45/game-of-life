@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Population {
-    private final List<List<Cell>> grid;
+    private List<List<Cell>> cellGrid;
     private final int rows;
     private final int columns;
 
@@ -18,18 +18,18 @@ public class Population {
         }
         this.rows = rows;
         this.columns = columns;
-        this.grid = new ArrayList<>(rows);
+        this.cellGrid = new ArrayList<>(rows);
         for (int i = 0; i < rows; i++) { // initialise all cells with DEAD state
             List<Cell> row = new ArrayList<>(columns);
             for (int j = 0; j < columns; j++) {
                 row.add(new Cell());
             }
-            grid.add(row);
+            cellGrid.add(row);
         }
     }
 
-    public void printGrid() { // for testing purpose only
-        for (List<Cell> row : grid) {
+    public void printPopulation() { // for testing purpose only
+        for (List<Cell> row : cellGrid) {
             for (Cell cell : row) {
                 cell.printValue();
             }
@@ -46,6 +46,10 @@ public class Population {
         return columns;
     }
 
+    public List<List<Cell>> getCellGrid() {
+        return cellGrid;
+    }
+
     public void generateInitialPopulation(int percentageAlive) {
         // generate initial population with percentageAlive
         if (percentageAlive <= 0 || percentageAlive > 100) {
@@ -56,7 +60,7 @@ public class Population {
         while (totalAliveCells > 0) {
             int randomRow = (int) (Math.random() * rows);
             int randomColumn = (int) (Math.random() * columns);
-            Cell cell = grid.get(randomRow).get(randomColumn);
+            Cell cell = cellGrid.get(randomRow).get(randomColumn);
             if (!cell.isAlive()) {
                 cell.setState(State.ALIVE);
                 totalAliveCells--;
@@ -66,7 +70,7 @@ public class Population {
 
     public int getTotalAliveCells() {
         int totalAliveCells = 0;
-        for (List<Cell> row : grid) {
+        for (List<Cell> row : cellGrid) {
             for (Cell cell : row) {
                 if (cell.isAlive()) {
                     totalAliveCells++;
@@ -74,5 +78,11 @@ public class Population {
             }
         }
         return totalAliveCells;
+    }
+
+    public void evaluateNextGeneration() {
+        // evaluate next generation
+        EvaluateLife evaluateLife = new EvaluateLife();
+        evaluateLife.evaluateNextGeneration(cellGrid);
     }
 }
