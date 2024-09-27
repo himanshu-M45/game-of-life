@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidPercentageException;
 import org.example.Exceptions.InvalidRowColumnValueException;
 import org.example.enums.State;
@@ -35,7 +36,7 @@ public class Population {
             }
             System.out.println();
         }
-        System.out.println("-----------------------------");
+        System.out.println();
     }
 
     public int getRows() {
@@ -50,7 +51,7 @@ public class Population {
         return cellGrid;
     }
 
-    public void generateInitialPopulation(int percentageAlive) {
+    public void seedPopulation(int percentageAlive) {
         // generate initial population with percentageAlive
         if (percentageAlive <= 0 || percentageAlive > 100) {
             throw new InvalidPercentageException("Percentage should be between 1 and 100");
@@ -67,6 +68,30 @@ public class Population {
             }
         }
     }
+    
+    public void simulateGenerations(int generations) {
+        for (int i = 0; i < generations; i++) {
+            evaluateNextGeneration();
+            printPopulation();
+            if (getTotalAliveCells() == 0) {
+                throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
+            }
+        }
+    }
+
+    public void simulateGenerations() {
+        while (getTotalAliveCells() != 0) {
+            evaluateNextGeneration();
+            printPopulation();
+        }
+        throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
+    }
+
+    private void evaluateNextGeneration() {
+        // evaluate next generation
+        GenerateNextGeneration generateNextGeneration = new GenerateNextGeneration();
+        generateNextGeneration.evaluateNextGeneration(cellGrid);
+    }
 
     public int getTotalAliveCells() {
         int totalAliveCells = 0;
@@ -78,11 +103,5 @@ public class Population {
             }
         }
         return totalAliveCells;
-    }
-
-    public void evaluateNextGeneration() {
-        // evaluate next generation
-        EvaluateLife evaluateLife = new EvaluateLife();
-        evaluateLife.evaluateNextGeneration(cellGrid);
     }
 }
