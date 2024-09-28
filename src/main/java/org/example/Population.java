@@ -42,10 +42,6 @@ public class Population {
         System.out.println();
     }
 
-    public List<List<Cell>> getCellGrid() {
-        return cellGrid;
-    }
-
     public void seedPopulation(int percentageAlive) {
         // generate initial population with percentageAlive
         if (percentageAlive < 0 || percentageAlive > 100) {
@@ -108,5 +104,13 @@ public class Population {
             }
         }
         return totalAliveCells;
+    }
+
+    public void setCellState(int row, int column, State state) {
+        if (row >= 0 && row < rows && column >= 0 && column < columns) {
+            cellGrid.get(row).get(column).setState(state);
+            return;
+        }
+        throw new IndexOutOfBoundsException("Invalid row or column value");
     }
 }

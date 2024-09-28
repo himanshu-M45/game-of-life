@@ -37,7 +37,7 @@ class GenerateNextGenerationTest {
     void testEvaluateLifeWithAllDeadCellsAndOneAliveCell() {
         Population population = new Population(10, 20);
         population.seedPopulation(0);
-        population.getCellGrid().get(5).get(5).setState(State.ALIVE);
+        population.setCellState(5, 5, State.ALIVE);
 
         assertThrows(AllCellsAreDeadException.class, () -> population.simulateGenerations(1));
     }
@@ -46,7 +46,7 @@ class GenerateNextGenerationTest {
     void testEvaluateLifeWithAllAliveCellsAndOneDeadCell() {
         Population population = new Population(10, 20);
         population.seedPopulation(100);
-        population.getCellGrid().get(5).get(5).setState(State.DEAD);
+        population.setCellState(5, 5, State.DEAD);
 
         assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
