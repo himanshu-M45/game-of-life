@@ -91,9 +91,4 @@ public class Population {
         }
         return totalAliveCells;
     }
-
-    public List<List<Cell>> getCellGrid() {
-        return cellGrid;
-    }
-
 }
