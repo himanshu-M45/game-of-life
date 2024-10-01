@@ -64,16 +64,16 @@ public class Population {
     }
 
     private int getCountOfNeighbouringCells(int row, int column) {
-        int[] stepsToReachNeighbourRow = {-1, -1, -1, 0, 0, 1, 1, 1};
-        int[] stepsToReachNeighbourColumn = {-1, 0, 1, -1, 1, -1, 0, 1};
         int count = 0;
-        // Check all 8 possible neighbors and count alive ones
-        for (int i = 0; i < 8; i++) {
-            int newRow = row + stepsToReachNeighbourRow[i];
-            int newColumn = column + stepsToReachNeighbourColumn[i];
-            if (newRow >= 0 && newRow < rows && newColumn >= 0 && newColumn < columns) {
-                if (cellGrid.get(newRow).get(newColumn).isAlive()) {
-                    count++;
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) continue; // Skip the cell itself
+                int newRow = row + i;
+                int newColumn = column + j;
+                if (newRow >= 0 && newRow < rows && newColumn >= 0 && newColumn < columns) {
+                    if (cellGrid.get(newRow).get(newColumn).isAlive()) {
+                        count++;
+                    }
                 }
             }
         }
