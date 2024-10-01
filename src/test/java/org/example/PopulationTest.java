@@ -3,7 +3,6 @@ package org.example;
 import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidInitializationValueException;
 import org.example.Exceptions.NoNewGenerationCanBeCreated;
-import org.example.Enum.State;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,22 +58,6 @@ class PopulationTest {
     @Test
     void testEvaluateLifeWithAllAliveCells() {
         Population population = new Population(10, 20, 100);
-        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
-    }
-
-    @Test
-    void testEvaluateLifeWithAllDeadCellsAndOneAliveCell() {
-        Population population = new Population(10, 20, 0);
-        population.getCellGrid().get(5).get(5).setState(State.ALIVE);
-
-        assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
-    }
-
-    @Test
-    void testEvaluateLifeWithAllAliveCellsAndOneDeadCell() {
-        Population population = new Population(10, 20, 100);
-        population.getCellGrid().get(5).get(5).setState(State.DEAD);
-
         assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 

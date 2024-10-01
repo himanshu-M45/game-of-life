@@ -3,7 +3,6 @@ package org.example;
 import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidInitializationValueException;
 import org.example.Exceptions.NoNewGenerationCanBeCreated;
-import org.example.Enum.State;
 import org.example.Service.IOOperation;
 
 import java.util.*;
@@ -28,7 +27,7 @@ public class Population {
                 Cell cell = new Cell();
                 row.add(cell);
                 if (totalAliveCells > 0 && Math.random() < (double) totalAliveCells / ((rows * columns) - (i * columns + j))) {
-                    cell.setState(State.ALIVE);
+                    cell.setInitialAlive();
                     totalAliveCells--;
                 }
             }
@@ -59,13 +58,7 @@ public class Population {
         for (int row = 0; row < cellGrid.size(); row++) {
             for (int column = 0; column < cellGrid.get(row).size(); column++) {
                 Cell cell = cellGrid.get(row).get(column); // extract cell from the grid
-                int neighbourCount = getCountOfNeighbouringCells(row, column); // get total alive neighbours count
-                if (!cell.isAlive() && neighbourCount == 3) {
-                    cell.setState(State.ALIVE);
-                }
-                if (cell.isAlive() && neighbourCount < 2 || neighbourCount > 3) {
-                    cell.setState(State.DEAD);
-                }
+                cell.setState(getCountOfNeighbouringCells(row, column)); // set the state of the cell
             }
         }
     }

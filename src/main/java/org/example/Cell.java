@@ -11,9 +11,20 @@ public class Cell {
         this.value = '.';
     }
 
-    public void setState(State state) {
-        this.state = state;
-        this.value = (state == State.ALIVE) ? '*' : '.';
+    public void setInitialAlive() {
+        this.state = State.ALIVE;
+        this.value = '*';
+    }
+
+    public void setState(int neighbours) {
+        if (this.state == State.DEAD && neighbours == 3) {
+            this.state = State.ALIVE;
+            this.value = '*';
+        }
+        if (this.state == State.ALIVE && (neighbours < 2 || neighbours > 3)) {
+            this.state = State.DEAD;
+            this.value = '.';
+        }
     }
 
     public boolean isAlive() {
