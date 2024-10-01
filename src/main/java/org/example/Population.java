@@ -39,19 +39,24 @@ public class Population {
         Queue<Integer> queue = new ArrayDeque<>(5);
         while (getTotalAliveCells() != 0) {
             IOOperation.printPopulation(cellGrid);
-            evaluateNextGeneration();
+            evaluateNextGeneration(); // generate next generation
 
-            if (queue.size() == 5) {
-                queue.poll(); // Remove the front element
-            }
-            queue.offer(getTotalAliveCells()); // Add the new element to the back
-
-            // Check if all elements in the queue are the same
-            if (queue.size() == 5 && queue.stream().distinct().count() == 1) {
-                throw new NoNewGenerationCanBeCreated("No new generation can be created. Exiting the simulation.");
-            }
+            // checks for duplicate generations and throw an exception if no new generation can be created.
+            checkForDuplicateGenerations(queue);
         }
         throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
+    }
+
+    private void checkForDuplicateGenerations(Queue<Integer> queue) {
+        if (queue.size() == 5) {
+            queue.poll(); // Remove the front element
+        }
+        queue.offer(getTotalAliveCells()); // Add the new element to the back
+
+        // Check if all elements in the queue are the same
+        if (queue.size() == 5 && queue.stream().distinct().count() == 1) {
+            throw new NoNewGenerationCanBeCreated("No new generation can be created. Exiting the simulation.");
+        }
     }
 
     public void evaluateNextGeneration() {
