@@ -4,7 +4,6 @@ import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidInitializationValueException;
 import org.example.Exceptions.NoNewGenerationCanBeCreated;
 import org.example.Enum.State;
-import org.example.Service.IOOperation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
