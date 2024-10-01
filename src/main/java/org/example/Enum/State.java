@@ -1,4 +1,4 @@
-package org.example.enums;
+package org.example.Enum;
 
 public enum State {
     ALIVE, DEAD

@@ -1,6 +1,6 @@
 package org.example;
 
-import org.example.enums.State;
+import org.example.Enum.State;
 
 public class Cell {
     private Character value;

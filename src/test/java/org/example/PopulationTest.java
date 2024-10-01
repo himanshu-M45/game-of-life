@@ -1,10 +1,10 @@
 package org.example;
 
 import org.example.Exceptions.AllCellsAreDeadException;
-import org.example.Exceptions.InvalidPercentageException;
-import org.example.Exceptions.InvalidRowColumnValueException;
+import org.example.Exceptions.InvalidInitializationValueException;
 import org.example.Exceptions.NoNewGenerationCanBeCreated;
-import org.example.enums.State;
+import org.example.Enum.State;
+import org.example.Service.IOOperation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,148 +12,107 @@ import static org.junit.jupiter.api.Assertions.*;
 class PopulationTest {
     @Test
     void testPopulationInitializationWith0RowsAnd0Columns() {
-        assertThrows(InvalidRowColumnValueException.class, () -> new Population(0, 0));
+        assertThrows(InvalidInitializationValueException.class, () -> new Population(0, 0, 0));
     }
 
     @Test
     void testPopulationInitializationWithNegativeRowsAndNegativeColumns() {
-        assertThrows(InvalidRowColumnValueException.class, () -> new Population(-10, -20));
-    }
-
-    @Test
-    void testTotalPopulation() {
-        Population population = new Population(10, 20);
-        assertEquals(200, population.totalPopulation(10, 20));
-    }
-
-    @Test
-    void tesPopulationGenerationAndPrintPopulation() {
-        Population population = new Population(10, 20);
-        assertDoesNotThrow(population::printPopulation);
+        assertThrows(InvalidInitializationValueException.class, () -> new Population(-10, -20, 0));
     }
 
     @Test
     void testPopulationWithNegativePercentage() {
-        Population population = new Population(10, 20);
-        assertThrows(InvalidPercentageException.class, () -> population.seedPopulation(-10));
+        assertThrows(InvalidInitializationValueException.class, () -> new Population(10, 20, -10));
     }
 
     @Test
     void test200PercentAlivePopulationThrowsException() {
-        Population population = new Population(10, 20);
-        assertThrows(InvalidPercentageException.class, () -> population.seedPopulation(200));
+        assertThrows(InvalidInitializationValueException.class, () -> new Population(10, 20, 200));
     }
 
     @Test
     void test10PercentAlivePopulationWhichIs20AliveCells() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(10);
+        Population population = new Population(10, 20, 10);
         int expectedTotalAliveCells = 20;
-
         assertEquals(expectedTotalAliveCells, population.getTotalAliveCells());
-        assertDoesNotThrow(population::printPopulation);
     }
 
     @Test
     void test100PercentAlivePopulationWhichIs200AliveCells() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(100);
+        Population population = new Population(10, 20, 100);
         int expectedTotalAliveCells = 200;
-
         assertEquals(expectedTotalAliveCells, population.getTotalAliveCells());
-        assertDoesNotThrow(population::printPopulation);
+    }
+
+    // ------------------------- next generation tests -------------------------
+    @Test
+    void testEvaluateLife() {
+        Population population = new Population(10, 20, 40);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 
     @Test
-    void testStartGameWith10GenerationsOfPopulationWith30PercentSeed() throws AllCellsAreDeadException {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(30);
-
-        assertDoesNotThrow(() -> population.simulateGenerations(10));
+    void testEvaluateLifeWithAllDeadCells() {
+        Population population = new Population(10, 20, 0);
+        assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
     }
 
     @Test
-    void testStartGameWith20GenerationsOfPopulationWith40PercentSeed() throws AllCellsAreDeadException {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(40);
-
-        assertDoesNotThrow(() -> population.simulateGenerations(10));
+    void testEvaluateLifeWithAllAliveCells() {
+        Population population = new Population(10, 20, 100);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 
     @Test
-    void testStartGameWith20GenerationsOfPopulationWith8PercentSeedThrowsException() throws AllCellsAreDeadException {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(1);
-
-        assertThrows(AllCellsAreDeadException.class, () -> population.simulateGenerations(20));
-    }
-
-    @Test
-    void testStartGameUntilNoNewGenerationCanBeCreatedWith0PercentSeedThrowsException() throws AllCellsAreDeadException {
-        Population population = new Population(5, 5);
-
-        population.seedPopulation(0);
+    void testEvaluateLifeWithAllDeadCellsAndOneAliveCell() {
+        Population population = new Population(10, 20, 0);
+        population.getCellGrid().get(5).get(5).setState(State.ALIVE);
 
         assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
     }
 
     @Test
-    void testStartGameUntilNoNewGenerationCanBeCreatedWith100PercentSeed() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(100);
-
-        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
-    }
-
-    @Test
-    void testStartGameUntilNoNewGenerationCanBeCreatedWith60PercentSeed() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(60);
+    void testEvaluateLifeWithAllAliveCellsAndOneDeadCell() {
+        Population population = new Population(10, 20, 100);
+        population.getCellGrid().get(5).get(5).setState(State.DEAD);
 
         assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 
+    // ------------------------- start game tests -------------------------
     @Test
-    void testStartGameUntilNoNewGenerationCanBeCreatedWith80PercentSeed() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(80);
-
+    void TestStartGameWith30PercentSeed() throws AllCellsAreDeadException {
+        Population population = new Population(10, 20, 30);
         assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 
     @Test
-    void testSetOneCellAliveWith0PercentSeed() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(0);
-        population.printPopulation();
-
-        assertDoesNotThrow(() -> population.setCellState(5,5, State.ALIVE));
-        population.printPopulation();
+    void TestStartGameWith20PercentSeed() throws AllCellsAreDeadException {
+        Population population = new Population(10, 20, 40);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 
     @Test
-    void testSetOneCellDeadWith100PercentSeed() {
-        Population population = new Population(10, 20);
-
-        population.seedPopulation(100);
-        population.printPopulation();
-
-        assertDoesNotThrow(() -> population.setCellState(5,5, State.DEAD));
-        population.printPopulation();
+    void TestStartGameWith8PercentSeedThrowsException() throws AllCellsAreDeadException {
+        Population population = new Population(10, 20, 1);
+        assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
     }
 
     @Test
-    void testInvalidRowColumnValueExceptionMessage() {
-        InvalidRowColumnValueException exception = assertThrows(InvalidRowColumnValueException.class, () -> new Population(0, 0));
-        assertEquals("Rows and columns should be greater than 0", exception.getMessage());
+    void TestStartGameWith0PercentSeedThrowsException() throws AllCellsAreDeadException {
+        Population population = new Population(5, 5, 0);
+        assertThrows(AllCellsAreDeadException.class, population::simulateGenerations);
+    }
+
+    @Test
+    void TestStartGameUntilAllCellsAreDeadWith100PercentSeed() {
+        Population population = new Population(10, 20, 100);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
+    }
+
+    @Test
+    void TestStartGameUntilAllCellsAreDeadWith60PercentSeed() {
+        Population population = new Population(10, 20, 60);
+        assertThrows(NoNewGenerationCanBeCreated.class, population::simulateGenerations);
     }
 }
