@@ -20,6 +20,10 @@ public class Population {
         this.columns = columns;
         this.cellGrid = new Cell[rows][columns];
         // generate initial population with percentageAlive
+        generateInitialPopulation(percentageAlive);
+    }
+
+    private void generateInitialPopulation(int percentageAlive) {
         int totalAliveCells = (rows * columns) * percentageAlive / 100;
         for (int i = 0; i < rows; i++) { // initialise all cells and set initial alive cells
             for (int j = 0; j < columns; j++) {

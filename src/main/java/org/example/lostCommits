@@ -1,0 +1,12 @@
+had to soft reset to a commit before java_pid5254.hprof was commited and added to local history
+
+2636215 (HEAD -> main) added IOOperation.java to handle printing and input
+52c9c51 removed GenerateNextGeneration.java and test file and integrated into Population, moved seepPopulation and integrated into constructor, removed totalPopulation(), now need refactoring
+4f980f4 Delete java_pid5254.hprof
+a9421eb covered some edge unit case's for evaluateNextGeneration()
+e5a50a6 removed CellNotFoundException() which was of no use
+d7747a6 removed findCellCoordinates() and improved readability of GenerateNextGeneration.java
+906997b removed getRows() & getColumns() getters
+cb13cea added some tests specific for the simulation which does not require any iteration number
+9cd3774 corrected the simulateGenerations() where the game was running infinitely after generating final generation
+2169bfc added some extra PopulationTest
