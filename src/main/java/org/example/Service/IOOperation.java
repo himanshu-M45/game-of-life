@@ -5,14 +5,10 @@ import org.example.Cell;
 import java.util.List;
 
 public class IOOperation {
-    public static void printPopulation(List<List<Cell>> cellGrid) {
-        for (List<Cell> row : cellGrid) {
-            for (Cell cell : row) {
-                if (cell.isAlive()) {
-                    System.out.print("* ");
-                } else {
-                    System.out.print(". ");
-                }
+    public static void printPopulation(Cell[][] cellGrid) {
+        for (Cell[] cells : cellGrid) {
+            for (int column = 0; column < cellGrid[0].length; column++) {
+                System.out.print(cells[column].isAlive() ? "* " : ". ");
             }
             System.out.println();
         }

@@ -13,7 +13,7 @@ public class Cell {
         this.state = State.ALIVE;
     }
 
-    public void setState(int neighbours) {
+    public void setCellState(int neighbours) {
         if (this.state == State.DEAD && neighbours == 3) {
             this.state = State.ALIVE;
         }
