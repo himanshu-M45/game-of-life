@@ -1,8 +1,6 @@
 package org.example.Service;
 
-import org.example.Cell;
-
-import java.util.List;
+import org.example.Entities.Cell;
 
 public class IOOperation {
     public static void printPopulation(Cell[][] cellGrid) {

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Entities;
 
 import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidInitializationValueException;

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Entities;
 
 import org.example.Exceptions.AllCellsAreDeadException;
 import org.example.Exceptions.InvalidInitializationValueException;
@@ -32,7 +32,7 @@ public class Population {
         }
     }
 
-    public void simulateGenerations() {
+    public void simulateGenerations() { // start game
         Queue<Integer> queue = new ArrayDeque<>(5);
         while (getTotalAliveCells() != 0) {
             IOOperation.printPopulation(cellGrid);
