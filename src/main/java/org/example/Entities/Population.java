@@ -42,7 +42,7 @@ public class Population {
             IOOperation.printPopulation(cellGrid);
             evaluateNextGeneration(); // generate next generation
 
-            // checks for duplicate generations and throw an exception if no new generation can be created.
+            // Preventing infinite loop by checks for duplicate generations.
             checkForDuplicateGenerations(queue);
         }
         throw new AllCellsAreDeadException("All cells are dead. Exiting the simulation.");
