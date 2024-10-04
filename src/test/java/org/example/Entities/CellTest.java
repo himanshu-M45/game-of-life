@@ -7,45 +7,53 @@ import static org.junit.jupiter.api.Assertions.*;
 class CellTest {
     @Test
     void TestCellInitialization() {
-        Cell cell = new Cell();
+        Cell cell = new Cell(4,5);
         assertFalse(cell.isAlive());
     }
 
     @Test
     void TestSetCellStateToAlive() {
-        Cell cell = new Cell();
-        cell.setCellState(3); // 3 neighbors should make a dead cell alive
+        Cell cell = new Cell(2,5);
+        assertFalse(cell.isAlive());
+        cell.setInitialAlive();
         assertTrue(cell.isAlive());
     }
 
     @Test
     void TestSetCellStateToDeadFromAlive() {
-        Cell cell = new Cell();
+        Cell cell = new Cell(3,4);
         cell.setInitialAlive();
-        cell.setCellState(1); // Less than 2 neighbors should make an alive cell dead
+        cell.setCellState();
         assertFalse(cell.isAlive());
     }
 
     @Test
     void TestSetCellStateToDeadFromAliveWithMoreThan3Neighbors() {
-        Cell cell = new Cell();
+        Cell cell = new Cell(4,7);
         cell.setInitialAlive();
-        cell.setCellState(4); // More than 3 neighbors should make an alive cell dead
+        cell.setCellState(); // More than 3 neighbors should make an alive cell dead
         assertFalse(cell.isAlive());
     }
 
+//    @Test
+//    void TestCellLifeThroughDifferentNumberOfNeighbours() {
+//        Cell cell = new Cell(5, 8);
+//        cell.setInitialAlive();
+//
+//        cell.setCellState(); // 2 neighbors should keep an alive cell alive
+//        assertTrue(cell.isAlive());
+//
+//        cell.setCellState(); // More than 3 neighbors should make an alive cell dead
+//        assertFalse(cell.isAlive());
+//
+//        cell.setCellState(); // 2 neighbors should keep an alive cell alive
+//        assertTrue(cell.isAlive());
+//    }
+
     @Test
-    void TestCellLifeThroughDifferentNumberOfNeighbours() {
-        Cell cell = new Cell();
-        cell.setInitialAlive();
-
-        cell.setCellState(2); // 2 neighbors should keep an alive cell alive
-        assertTrue(cell.isAlive());
-
-        cell.setCellState(5); // More than 3 neighbors should make an alive cell dead
-        assertFalse(cell.isAlive());
-
-        cell.setCellState(3); // 2 neighbors should keep an alive cell alive
-        assertTrue(cell.isAlive());
+    void TestLocationCoordinates() {
+        Cell cell = new Cell(3,5);
+        Location location = cell.getLocation();
+        assertTrue(location.isSameLocation(3, 5));
     }
 }

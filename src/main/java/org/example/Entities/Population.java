@@ -21,17 +21,36 @@ public class Population {
         this.cellGrid = new Cell[rows][columns];
         // generate initial population with percentageAlive
         generateInitialPopulation(percentageAlive);
+        initializeNeighbours();
     }
 
     private void generateInitialPopulation(int percentageAlive) {
         int totalAliveCells = (rows * columns) * percentageAlive / 100;
         for (int i = 0; i < rows; i++) { // initialise all cells and set initial alive cells
             for (int j = 0; j < columns; j++) {
-                cellGrid[i][j] = new Cell();
+                cellGrid[i][j] = new Cell(i, j);
                 if (totalAliveCells > 0 && Math.random() < (double) totalAliveCells / ((rows * columns) - (i * columns + j))) {
                     cellGrid[i][j].setInitialAlive();
                     totalAliveCells--;
                 }
+            }
+        }
+    }
+
+    private void initializeNeighbours() {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Cell cell = cellGrid[row][col];
+                Cell[] neighbours = new Cell[8];
+                int index = 0;
+                for (int i = row - 1; i <= row + 1; i++) {
+                    for (int j = col - 1; j <= col + 1; j++) {
+                        if (i >= 0 && i < rows && j >= 0 && j < columns && !(i == row && j == col)) {
+                            neighbours[index++] = cellGrid[i][j];
+                        }
+                    }
+                }
+                cell.getLocation().setNeighbours(neighbours);
             }
         }
     }
@@ -64,23 +83,9 @@ public class Population {
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < columns; col++) {
                 Cell cell = cellGrid[row][col]; // extract cell from the grid
-                cell.setCellState(getCountOfNeighbouringCells(row, col)); // set the state of the cell
+                cell.setCellState(); // set the state of the cell
             }
         }
-    }
-
-    private int getCountOfNeighbouringCells(int row, int col) {
-        int count = 0;
-        for (int i = row - 1; i <= row + 1; i++) {
-            for (int j = col - 1; j <= col + 1; j++) {
-                if (i >= 0 && i < rows && j >= 0 && j < columns && !(i == row && j == col)) {
-                    if (cellGrid[i][j].isAlive()) {
-                        count++;
-                    }
-                }
-            }
-        }
-        return count;
     }
 
     public int getTotalAliveCells() {
